@@ -9,8 +9,8 @@ describe('Register Use Case', () => {
 
     it('should be able to register', async () => {
         
-        const inMemoryusersRepository = new InMemoryUsersRepository
-        const registerUseCase = new RegisterUseCase(inMemoryusersRepository)
+        const inMemoryUsersRepository = new InMemoryUsersRepository
+        const registerUseCase = new RegisterUseCase(inMemoryUsersRepository)
 
         const { user } = await registerUseCase.execute({
             name: 'Test',
@@ -23,8 +23,8 @@ describe('Register Use Case', () => {
     
     it('should not be able to register with same email twice', async () => {
         
-        const inMemoryusersRepository = new InMemoryUsersRepository
-        const registerUseCase = new RegisterUseCase(inMemoryusersRepository)
+        const inMemoryUsersRepository = new InMemoryUsersRepository
+        const registerUseCase = new RegisterUseCase(inMemoryUsersRepository)
 
         await registerUseCase.execute({
             name: 'Test',
@@ -44,8 +44,8 @@ describe('Register Use Case', () => {
 
     it('should hash user password', async () => {
         
-        const inMemoryusersRepository = new InMemoryUsersRepository
-        const registerUseCase = new RegisterUseCase(inMemoryusersRepository)
+        const inMemoryUsersRepository = new InMemoryUsersRepository
+        const registerUseCase = new RegisterUseCase(inMemoryUsersRepository)
 
         const { user } = await registerUseCase.execute({
             name: 'Test',
