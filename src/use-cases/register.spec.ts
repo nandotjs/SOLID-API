@@ -1,25 +1,51 @@
 import { describe, it, expect } from 'vitest'
 import { RegisterUseCase} from './register'
 import { compare } from 'bcryptjs'
+import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
+import { UserAlreadyExistsError } from './errors/user-already-exists-error';
+
 
 describe('Register Use Case', () => {
-    it('shoul hash user password', async () => {
+
+    it('should be able to register', async () => {
         
-        const registerUseCase = new RegisterUseCase({
+        const inMemoryusersRepository = new InMemoryUsersRepository
+        const registerUseCase = new RegisterUseCase(inMemoryusersRepository)
 
-            async create(data) {
-                return{
-                    id: 'user-1',
-                    name: data.name,
-                    email: data.email,
-                    password_hash: data.password_hash
-                }
-            },
-
-            async findByEmail(email) {
-                return null
-            }
+        const { user } = await registerUseCase.execute({
+            name: 'Test',
+            email: 'test@example.com',
+            password: '123456'
         })
+
+        expect(user.id).toEqual(expect.any(String))
+    })
+    
+    it('should not be able to register with same email twice', async () => {
+        
+        const inMemoryusersRepository = new InMemoryUsersRepository
+        const registerUseCase = new RegisterUseCase(inMemoryusersRepository)
+
+        await registerUseCase.execute({
+            name: 'Test',
+            email: 'test@example.com',
+            password: '123456'
+        })
+
+        await expect(() => 
+            registerUseCase.execute({
+                name: 'Test',
+                email: 'test@example.com',
+                password: '123456'
+            })
+        ).rejects.toBeInstanceOf(UserAlreadyExistsError)
+
+    })
+
+    it('should hash user password', async () => {
+        
+        const inMemoryusersRepository = new InMemoryUsersRepository
+        const registerUseCase = new RegisterUseCase(inMemoryusersRepository)
 
         const { user } = await registerUseCase.execute({
             name: 'Test',
@@ -34,4 +60,5 @@ describe('Register Use Case', () => {
 
         expect(isPasswordHashed).toBe(true)
     })
+    
 })
