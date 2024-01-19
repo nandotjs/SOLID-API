@@ -12,7 +12,7 @@ Gympass style app
 - [x] Deve ser possivel o usuário buscar academias próximas (até 10km)
 - [x] Deve ser possivel o usuário buscar academias pelo nome
 - [x] Deve ser possivel o usuário realizar checkin em uma academia
-- [ ] Deve ser possivel validar o checkin de um usuário
+- [x] Deve ser possivel validar o checkin de um usuário
 - [x] Deve ser possivel cadastrar academias
 
 ## RNs
