@@ -5,6 +5,9 @@ import { ResourceNotFoundError } from "./errors/resource-not-found-error"
 import { getDistanceBetweenCoordinates } from "@/utils/get-distance-between-coordinates"
 import { MaxDistanceError } from "./errors/max-distance-error"
 import { MaxCheckInsError } from "./errors/max-check-ins-error"
+import defineConfig from './../../vite.config';
+import dayjs from "dayjs"
+import { LateCheckInError } from "./errors/late-check-in-error"
 
 
 interface ValidateCheckInUseCaseRequest {
@@ -25,6 +28,15 @@ export class ValidateCheckInUseCase {
 
         if(!checkIn) {
             throw new ResourceNotFoundError()
+        }
+
+        const distanceInMinutesFromCheckInCreation = dayjs(new Date()).diff(
+            checkIn.created_at,
+            'minutes'
+        )
+
+        if(distanceInMinutesFromCheckInCreation > 20) {
+            throw new LateCheckInError()
         }
 
         checkIn.validates_at = new Date()
