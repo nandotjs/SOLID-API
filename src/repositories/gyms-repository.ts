@@ -10,5 +10,4 @@ export interface GymsRepository {
     findById(id: string) : Promise<Gym | null>
     searchManyByName(query: string, page: number): Promise<Gym[]>
     findManyNearby(params: FindManyNearbyParams): Promise<Gym[]>
-
 }
