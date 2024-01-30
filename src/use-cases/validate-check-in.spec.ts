@@ -50,7 +50,7 @@ describe('Validate Check In Use Case', () => {
         })
 
         const time = 1000 * 60 * 21 // 21min
-        console.log(time)
+        
         vi.advanceTimersByTime(time)
         
         await expect(() => 
