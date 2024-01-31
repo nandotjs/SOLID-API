@@ -17,14 +17,14 @@ describe('Authenticate e2e', () => {
         .post('/user')
         .send({
             name: "Test",
-            email: "test@exmple.com",
+            email: "test@example.com",
             password: "123456",
         })
 
         const response = await request(app.server)
         .post('/session')
         .send({
-            email: "test@exmple.com",
+            email: "test@example.com",
             password: "123456",
         })
         

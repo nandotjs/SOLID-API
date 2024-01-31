@@ -17,20 +17,27 @@ describe('Profile e2e', () => {
         .post('/user')
         .send({
             name: "Test",
-            email: "test@exmple.com",
+            email: "test@example.com",
             password: "123456",
         })
 
         const response = await request(app.server)
         .post('/session')
         .send({
-            email: "test@exmple.com",
+            email: "test@example.com",
             password: "123456",
         })
+
+        const { tokenJWT } = response.body
+
+        const profileResponse = await request(app.server)
+        .get('/me')
+        .set('Authorization', `Bearer ${tokenJWT}`)
+        .send()
         
-        expect(response.statusCode).toEqual(200)
-        expect(response.body).toEqual({
-            tokenJWT: expect.any(String),
-        })
+        expect(profileResponse.statusCode).toEqual(200)
+        expect(profileResponse.body.user).toEqual(expect.objectContaining({
+            email: 'test@example.com'
+        }))
     })
 })
