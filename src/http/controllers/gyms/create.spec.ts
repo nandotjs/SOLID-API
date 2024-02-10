@@ -32,15 +32,15 @@ describe('Create Gym e2e', () => {
 
     it('should be able to create a gym', async () => {
         const response = await request(app.server)
-            .post('/gyms')
-            .set('Authorization', `Bearer ${tokenJWT}`)
-            .send({
-                name: 'Gym Name',
-                description: 'Gym Description',
-                phone: '123456789',
-                latitude: -25.4217836,
-                longitude: -49.2843053,
-            })
+        .post('/gyms')
+        .set('Authorization', `Bearer ${tokenJWT}`)
+        .send({
+            name: 'Gym Name',
+            description: 'Gym Description',
+            phone: '123456789',
+            latitude: -25.4217836,
+            longitude: -49.2843053,
+        })
 
         expect(response.statusCode).toEqual(201)
     })
