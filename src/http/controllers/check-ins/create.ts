@@ -8,10 +8,10 @@ export async function create(req: FastifyRequest, rep: FastifyReply) {
     })
 
     const CreateCheckInBodySchema = z.object({
-        latitude: z.number().refine(value => {
+        latitude: z.coerce.number().refine(value => {
             return Math.abs(value) <= 90
         }),
-        longitude: z.number().refine(value => {
+        longitude: z.coerce.number().refine(value => {
             return Math.abs(value) <= 180
         }),
     })
@@ -27,6 +27,6 @@ export async function create(req: FastifyRequest, rep: FastifyReply) {
         userLatitude: latitude,
         userLongitude: longitude,
     })
-        
-    return rep.status(201).send()   
+    
+    return rep.status(201).send()
 }
