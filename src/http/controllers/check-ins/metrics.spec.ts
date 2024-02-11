@@ -2,8 +2,9 @@ import { app } from '@/app'
 import { prisma } from '@/lib/prisma'
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { CheckIn } from '@prisma/client';
 
-describe('Check-In e2e', () => {
+describe('Metrics e2e', () => {
     let tokenJWT: any
 
     beforeAll(async () => {
@@ -31,7 +32,9 @@ describe('Check-In e2e', () => {
         await app.close()
     })
 
-    it('should be able to create a check-in', async () => {
+    it('should be able to get user metrics', async () => {
+        const user = await prisma.user.findFirstOrThrow()
+
         const gym = await prisma.gym.create({
             data: {
                 name: 'Gym Name',
@@ -42,14 +45,25 @@ describe('Check-In e2e', () => {
             }
         })
 
-        const response = await request(app.server)
-        .post(`/gyms/${gym.id}/check-ins`)
-        .set('Authorization', `Bearer ${tokenJWT}`)
-        .send({
-            latitude: -25.4217836,
-            longitude: -49.2843053,
+        const checkIns = await prisma.checkIn.createMany({
+            data: [
+                {
+                    gym_id:gym.id,
+                    user_id:user.id
+                },
+                {
+                    gym_id:gym.id,
+                    user_id:user.id
+                }
+            ]
         })
+            
+        const response = await request(app.server)
+        .get('/check-ins/metrics')
+        .set('Authorization', `Bearer ${tokenJWT}`)
+        .send()
         
-        expect(response.statusCode).toEqual(201)    
+        expect(response.statusCode).toEqual(200)
+        expect(response.body.checkInsCount).toEqual(2)
     })
 })

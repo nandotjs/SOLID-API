@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-describe('Check-In e2e', () => {
+describe('Validate Check-In e2e', () => {
     let tokenJWT: any
 
     beforeAll(async () => {
@@ -31,7 +31,7 @@ describe('Check-In e2e', () => {
         await app.close()
     })
 
-    it('should be able to create a check-in', async () => {
+    it('should be able to validate a check-in', async () => {
         const gym = await prisma.gym.create({
             data: {
                 name: 'Gym Name',
@@ -42,14 +42,23 @@ describe('Check-In e2e', () => {
             }
         })
 
-        const response = await request(app.server)
+        await request(app.server)
         .post(`/gyms/${gym.id}/check-ins`)
         .set('Authorization', `Bearer ${tokenJWT}`)
         .send({
             latitude: -25.4217836,
             longitude: -49.2843053,
         })
+
+        const checkIn = await prisma.checkIn.findFirstOrThrow()
+
+        const response = await request(app.server)
+        .patch(`/check-ins/${checkIn.id}/validate`)
+        .set('Authorization', `Bearer ${tokenJWT}`)
+        .send({
+            checkInId: checkIn.id
+        })
         
-        expect(response.statusCode).toEqual(201)    
+        expect(response.statusCode).toEqual(204)    
     })
 })
